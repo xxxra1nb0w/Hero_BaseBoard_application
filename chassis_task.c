@@ -1,7 +1,7 @@
 /**
   ****************************(C) COPYRIGHT 2019 DJI****************************
   * @file       chassis.c/h
-  * @brief      µ×ÅÌ¿ØÖÆÈÎÎñ
+  * @brief      åº•ç›˜æ§åˆ¶ä»»åŠ¡
   * @note
   * @history
   *  Version    Date            Author          Modification
@@ -46,9 +46,9 @@ int anglesr;
     }
 
 /**
- * @brief          ³õÊ¼»¯"chassis_move"½á¹¹Ìå£¬³õÊ¼»¯PID£¬»ñÈ¡Ò£¿ØÆ÷Ö¸Õë£¬
- *                 ³õÊ¼»¯3508µç»ú½á¹¹Ìå£¬³õÊ¼»¯ÔÆÌ¨µç»ú½á¹¹Ìå£¬³õÊ¼»¯µ×ÅÌµç»ú½Ç¶È½á¹¹Ìå
- * @param[out]     chassis_move_init:"chassis_move"½á¹¹ÌåÖ¸Õë
+ * @brief          åˆå§‹åŒ–"chassis_move"ç»“æ„ä½“ï¼Œåˆå§‹åŒ–PIDï¼Œè·å–é¥æ§å™¨æŒ‡é’ˆï¼Œ
+ *                 åˆå§‹åŒ–3508ç”µæœºç»“æ„ä½“ï¼Œåˆå§‹åŒ–äº‘å°ç”µæœºç»“æ„ä½“ï¼Œåˆå§‹åŒ–åº•ç›˜ç”µæœºè§’åº¦ç»“æ„ä½“
+ * @param[out]     chassis_move_init:"chassis_move"ç»“æ„ä½“æŒ‡é’ˆ
  * @retval         none
  */
 static void chassis_init(chassis_move_t *chassis_move_init);
@@ -56,65 +56,65 @@ static void chassis_init(chassis_move_t *chassis_move_init);
 static void chassis_get_comm_data(chassis_move_t *receive_comm_data);
 
 // ============================================================
-// È«Ïò¶æÂÖÏà¹Ø¾²Ì¬º¯ÊıÉùÃ÷
+// å…¨å‘èˆµè½®ç›¸å…³é™æ€å‡½æ•°å£°æ˜
 // ============================================================
-// ¶æÂÖÔË¶¯Ñ§·Ö½â£ºvx/vy/wz ¡ú ¸÷ÂÖËÙ¶È + Ä¿±ê½Ç¶È
+// èˆµè½®è¿åŠ¨å­¦åˆ†è§£ï¼švx/vy/wz â†’ å„è½®é€Ÿåº¦ + ç›®æ ‡è§’åº¦
 static void chassic_rudder_preliminary_A_S_solution(chassis_move_t *chassic_rudder_preliminary_solution);
-// ¶æÂÖ½Ç¶È¿ØÖÆÖ÷Ñ­»·£¨Çı¶¯4¸öGM6020£©
+// èˆµè½®è§’åº¦æ§åˆ¶ä¸»å¾ªç¯ï¼ˆé©±åŠ¨4ä¸ªGM6020ï¼‰
 static void rudder_control_loop(chassis_move_t *rudder_move_control_loop);
-// µ¥¸ö¶æÂÖÏà¶Ô½Ç¶È¼ÆËãÓë·½Ïò´¦Àí
+// å•ä¸ªèˆµè½®ç›¸å¯¹è§’åº¦è®¡ç®—ä¸æ–¹å‘å¤„ç†
 static void Rudder_motor_relative_angle_control(Rudder_Motor_t *chassis_motor);
-// µ¥¸ö¶æÂÖ PID ¼ÆËã£¨Íâ»·½Ç¶È + ÄÚ»·ËÙ¶È£¬Ê¹ÓÃpid_type_def£©
+// å•ä¸ªèˆµè½® PID è®¡ç®—ï¼ˆå¤–ç¯è§’åº¦ + å†…ç¯é€Ÿåº¦ï¼Œä½¿ç”¨pid_type_defï¼‰
 static void RUDDER_MOTOR_PID_CONTROL(Rudder_Motor_t *rudder_motor);
 // /**
-//  * @brief          ÉèÖÃµ×ÅÌÄ£Ê½£¬ÈçĞèĞŞ¸ÄÇëÖ±½Ó¸ü¸Ä'chassis_behaviour_mode_set'
-//  * @param[out]     chassis_move_mode:"chassis_move"½á¹¹ÌåÖ¸Õë
+//  * @brief          è®¾ç½®åº•ç›˜æ¨¡å¼ï¼Œå¦‚éœ€ä¿®æ”¹è¯·ç›´æ¥æ›´æ”¹'chassis_behaviour_mode_set'
+//  * @param[out]     chassis_move_mode:"chassis_move"ç»“æ„ä½“æŒ‡é’ˆ
 //  * @retval         none
 //  */
 // static void chassis_set_mode(chassis_move_t *chassis_move_mode);
 
 /**
- * @brief          Ä£Ê½ÇĞ»»¹ı¶É´¦Àí£¬µ±Ä£Ê½¸Ä±äÊ±£¬ĞèÒª½«Ò»Ğ©±äÁ¿ÇåÁã£¬
- *                 ÀıÈçÂË²¨Æ÷Öµ¡¢PID»ı·ÖÖµµÈ£¬È·±£Æ½»¬ÇĞ»»
- * @param[out]     chassis_move_transit:"chassis_move"½á¹¹ÌåÖ¸Õë
+ * @brief          æ¨¡å¼åˆ‡æ¢è¿‡æ¸¡å¤„ç†ï¼Œå½“æ¨¡å¼æ”¹å˜æ—¶ï¼Œéœ€è¦å°†ä¸€äº›å˜é‡æ¸…é›¶ï¼Œ
+ *                 ä¾‹å¦‚æ»¤æ³¢å™¨å€¼ã€PIDç§¯åˆ†å€¼ç­‰ï¼Œç¡®ä¿å¹³æ»‘åˆ‡æ¢
+ * @param[out]     chassis_move_transit:"chassis_move"ç»“æ„ä½“æŒ‡é’ˆ
  * @retval         none
  */
 void chassis_mode_change_control_transit(chassis_move_t *chassis_move_transit);
 
 /**
- * @brief          ¸üĞÂµ×ÅÌ·´À¡Êı¾İ£¬¶ÁÈ¡µç»úËÙ¶È¡¢±àÂëÆ÷½Ç¶È£¬
- *                 ¼ÆËã»úÌåËÙ¶È¡¢½Ç¶È£¬ÒÔ¼°IMU×ËÌ¬
- * @param[out]     chassis_move_update:"chassis_move"½á¹¹ÌåÖ¸Õë
+ * @brief          æ›´æ–°åº•ç›˜åé¦ˆæ•°æ®ï¼Œè¯»å–ç”µæœºé€Ÿåº¦ã€ç¼–ç å™¨è§’åº¦ï¼Œ
+ *                 è®¡ç®—æœºä½“é€Ÿåº¦ã€è§’åº¦ï¼Œä»¥åŠIMUå§¿æ€
+ * @param[out]     chassis_move_update:"chassis_move"ç»“æ„ä½“æŒ‡é’ˆ
  * @retval         none
  */
 static void chassis_feedback_update(chassis_move_t *chassis_move_update);
 
 // /**
-//  * @brief          ÉèÖÃµ×ÅÌ¿ØÖÆÁ¿£¨ËÙ¶È¡¢½Ç¶ÈµÈ£©
-//  * @param[out]     chassis_move_control:"chassis_move"½á¹¹ÌåÖ¸Õë
+//  * @brief          è®¾ç½®åº•ç›˜æ§åˆ¶é‡ï¼ˆé€Ÿåº¦ã€è§’åº¦ç­‰ï¼‰
+//  * @param[out]     chassis_move_control:"chassis_move"ç»“æ„ä½“æŒ‡é’ˆ
 //  * @retval         none
 //  */
 // static void chassis_set_control(chassis_move_t *chassis_move_control);
 
 /**
- * @brief          Ö÷¿ØÖÆÑ­»·£ºÔË¶¯Ñ§½âËã¡¢PID¼ÆËã¡¢Êä³öÏŞÖÆ
- * @param[out]     chassis_move_control_loop:"chassis_move"½á¹¹ÌåÖ¸Õë
+ * @brief          ä¸»æ§åˆ¶å¾ªç¯ï¼šè¿åŠ¨å­¦è§£ç®—ã€PIDè®¡ç®—ã€è¾“å‡ºé™åˆ¶
+ * @param[out]     chassis_move_control_loop:"chassis_move"ç»“æ„ä½“æŒ‡é’ˆ
  * @retval         none
  */
 static void chassis_control_loop(chassis_move_t *chassis_move_control_loop);
 
-// Ë«Í¨µÀÍ¨ĞÅÊı¾İ´ò°ü
+// åŒé€šé“é€šä¿¡æ•°æ®æ‰“åŒ…
 static void comm_data_pack(chassis_move_t *send_data_pack);
 
 #if INCLUDE_uxTaskGetStackHighWaterMark
 uint32_t chassis_high_water;
 #endif
-// µ×ÅÌ¿ØÖÆ½á¹¹Ìå
+// åº•ç›˜æ§åˆ¶ç»“æ„ä½“
 chassis_move_t chassis_move;
 extern int8_t QA, BPIN, FOLLOW;
 int8_t DBUS_error_flag = 0;
 extern fp32 RX_PITCH, RX_first_speed, RX_back_speed;
-int8_t KEY_shift, KEY_z, KEY_c, KEY_q; // Ë«Í¨µÀ°´¼ü±êÖ¾
+int8_t KEY_shift, KEY_z, KEY_c, KEY_q; // åŒé€šé“æŒ‰é”®æ ‡å¿—
 int16_t cnts = 0;
 extern gimbal_control_t gimbal_control;
 extern gimbal_behaviour_e gimbal_behaviour;
@@ -122,18 +122,18 @@ extern vision_rxfifo_t *vision_rx;
 int8_t turn_flags = 0;
 extern int MODE;
 /**
- * @brief          µ×ÅÌÈÎÎñÈë¿Ú£¬ÖÜÆÚ CHASSIS_CONTROL_TIME_MS 2ms
- * @param[in]      pvParameters: ²ÎÊı
+ * @brief          åº•ç›˜ä»»åŠ¡å…¥å£ï¼Œå‘¨æœŸ CHASSIS_CONTROL_TIME_MS 2ms
+ * @param[in]      pvParameters: å‚æ•°
  * @retval         none
  */
 void chassis_task(void const *pvParameters)
 {
-    // ÑÓ³ÙÒ»¶ÎÊ±¼ä
+    // å»¶è¿Ÿä¸€æ®µæ—¶é—´
     vTaskDelay(CHASSIS_TASK_INIT_TIME);
 
-    // ³õÊ¼»¯µ×ÅÌ
+    // åˆå§‹åŒ–åº•ç›˜
     chassis_init(&chassis_move);
-    // µÈ´ıµ×ÅÌµç»úºÍÒ£¿ØÆ÷¾ÍĞ÷
+    // ç­‰å¾…åº•ç›˜ç”µæœºå’Œé¥æ§å™¨å°±ç»ª
     /*while (toe_is_error(CHASSIS_MOTOR1_TOE) || toe_is_error(CHASSIS_MOTOR2_TOE) || toe_is_error(CHASSIS_MOTOR3_TOE) || toe_is_error(CHASSIS_MOTOR4_TOE) || toe_is_error(DBUS_TOE))
     {
         vTaskDelay(CHASSIS_CONTROL_TIME_MS);
@@ -143,58 +143,55 @@ void chassis_task(void const *pvParameters)
     {
 		chassis_move.CHASSIS_xTickCount = xTaskGetTickCount();
 		chassis_get_comm_data(&chassis_move);
-		// // ÉèÖÃµ×ÅÌÄ£Ê½
+		// // è®¾ç½®åº•ç›˜æ¨¡å¼
 		// chassis_set_mode(&chassis_move);
-		// // Ä£Ê½ÇĞ»»¹ı¶É Çå³ıÂË²¨Æ÷µÈ
+		// // æ¨¡å¼åˆ‡æ¢è¿‡æ¸¡ æ¸…é™¤æ»¤æ³¢å™¨ç­‰
 		// chassis_mode_change_control_transit(&chassis_move);
-		// ¸üĞÂ·´À¡Êı¾İ
+		// æ›´æ–°åé¦ˆæ•°æ®
 		chassis_feedback_update(&chassis_move);
-		// // ÉèÖÃ¿ØÖÆÁ¿
+		// // è®¾ç½®æ§åˆ¶é‡
 		// chassis_set_control(&chassis_move);
-		// µ×ÅÌ¿ØÖÆPID¼ÆËã£¨º¬È«Ïò¶æÂÖÔË¶¯Ñ§·Ö½â + ÂÖËÙPID£©
+		// åº•ç›˜æ§åˆ¶PIDè®¡ç®—ï¼ˆå«å…¨å‘èˆµè½®è¿åŠ¨å­¦åˆ†è§£ + è½®é€ŸPIDï¼‰
 		chassis_control_loop(&chassis_move);
-		// M3508 ÂÖËÙ¹¦ÂÊ¿ØÖÆ£¨Ô­ÓĞÂß¼­±£Áô£©
+		// M3508 è½®é€ŸåŠŸç‡æ§åˆ¶ï¼ˆåŸæœ‰é€»è¾‘ä¿ç•™ï¼‰
 		CHASSIC_MOTOR_POWER_CONTROL(&chassis_move);
-		// GM6020 ¶æÂÖµçÁ÷»ã×Ü + °²È«ÏŞ·ù
+		// GM6020 èˆµè½®ç”µæµæ±‡æ€» + å®‰å…¨é™å¹…
 		RUDDER_POWER_CONTROL(&chassis_move);
-		// Ë«Í¨µÀ´ò°ü
+		// åŒé€šé“æ‰“åŒ…
 		comm_data_pack(&chassis_move);
-		// Ë«Í¨µÀ·¢ËÍ
+		// åŒé€šé“å‘é€
 //		CAN_comm_up(chassis_move.comm_a_output);
 
-		// ¼ì²éË«Í¨µÀÍ¨ĞÅÊ±¼ä£¬È·±£Êı¾İÓĞĞ§
+		// æ£€æŸ¥åŒé€šé“é€šä¿¡æ—¶é—´ï¼Œç¡®ä¿æ•°æ®æœ‰æ•ˆ
 		if (chassis_move.CHASSIS_xTickCount - REPLACE_COMM_A_TIME < 2000 && chassis_move.CHASSIS_xTickCount - REPLACE_COMM_B_TIME < 2000)
 		{
-			// Ò£¿ØÆ÷µôÏßÊ±Í£Ö¹ËùÓĞµç»ú
+			// é¥æ§å™¨æ‰çº¿æ—¶åœæ­¢æ‰€æœ‰ç”µæœº
 			if (DBUS_error_flag)
 			{
-//				CAN_cmd_chassis(0, 0, 0, 0);
-//				CAN_cmd_rudder(0, 0, 0, 0);
-//				CAN_cmd_chassis(0x2000, 0x2000, 0x2000, 0x2000);
-//				CAN_cmd_rudder(0x2000, 0x2000, 0x2000, 0x2000);
+				CAN_cmd_chassis(0, 0, 0, 0);
+				CAN_cmd_rudder(0, 0, 0, 0);
+
 			}
 			else
 			{
-				// ·¢ËÍ M3508 ÂÖËÙµçÁ÷£¨CAN2, 0x200 ¡ú 0x201-0x204£©
-//				CAN_cmd_chassis(chassis_move.motor_chassis[0].give_current, chassis_move.motor_chassis[1].give_current,
-//								chassis_move.motor_chassis[2].give_current, chassis_move.motor_chassis[3].give_current);
-//				// ·¢ËÍ GM6020 ¶æÂÖ·½ÏòµçÁ÷£¨CAN2, 0x1FF ¡ú 0x205-0x208£©
-//				CAN_cmd_rudder((int16_t)chassis_move.rudder_given_current[0],
-//							   (int16_t)chassis_move.rudder_given_current[1],
-//							   (int16_t)chassis_move.rudder_given_current[2],
-//							   (int16_t)chassis_move.rudder_given_current[3]);
-//							CAN_cmd_rudder(0x2000, 0x2000, 0x2000, 0x2000);
+				// å‘é€ M3508 è½®é€Ÿç”µæµï¼ˆCAN2, 0x200 â†’ 0x201-0x204ï¼‰
+				CAN_cmd_chassis(chassis_move.motor_chassis[0].give_current, chassis_move.motor_chassis[1].give_current,
+								chassis_move.motor_chassis[2].give_current, chassis_move.motor_chassis[3].give_current);
+				// å‘é€ GM6020 èˆµè½®æ–¹å‘ç”µæµï¼ˆCAN2, 0x1FF â†’ 0x205-0x208ï¼‰
+				CAN_cmd_rudder((int16_t)chassis_move.rudder_given_current[0],
+							   (int16_t)chassis_move.rudder_given_current[1],
+							   (int16_t)chassis_move.rudder_given_current[2],
+							   (int16_t)chassis_move.rudder_given_current[3]);
+							CAN_cmd_rudder(0x2000, 0x2000, 0x2000, 0x2000);
 
 			}
 		}
 		else
 		{
-			CAN_cmd_rudder(0x2000, 0x2000, 0x2000, 0x2000);
-			CAN_cmd_chassis(0x2000, 0x2000, 0x2000, 0x2000);
-//			CAN_cmd_chassis(0, 0, 0, 0);
-//			CAN_cmd_rudder(0, 0, 0, 0);
+			CAN_cmd_chassis(0, 0, 0, 0);
+			CAN_cmd_rudder(0, 0, 0, 0);
 		}
-	// ÏµÍ³ÑÓÊ±
+	// ç³»ç»Ÿå»¶æ—¶
 	vTaskDelay(CHASSIS_CONTROL_TIME_MS);
 
 #if INCLUDE_uxTaskGetStackHighWaterMark
@@ -204,9 +201,9 @@ void chassis_task(void const *pvParameters)
 }
 
 /**
- * @brief          ³õÊ¼»¯"chassis_move"½á¹¹Ìå£¬³õÊ¼»¯PID£¬»ñÈ¡Ò£¿ØÆ÷Ö¸Õë£¬
- *                 ³õÊ¼»¯3508µç»ú½á¹¹Ìå£¬³õÊ¼»¯ÔÆÌ¨µç»ú½á¹¹Ìå£¬³õÊ¼»¯µ×ÅÌµç»ú½Ç¶È½á¹¹Ìå
- * @param[out]     chassis_move_init:"chassis_move"½á¹¹ÌåÖ¸Õë
+ * @brief          åˆå§‹åŒ–"chassis_move"ç»“æ„ä½“ï¼Œåˆå§‹åŒ–PIDï¼Œè·å–é¥æ§å™¨æŒ‡é’ˆï¼Œ
+ *                 åˆå§‹åŒ–3508ç”µæœºç»“æ„ä½“ï¼Œåˆå§‹åŒ–äº‘å°ç”µæœºç»“æ„ä½“ï¼Œåˆå§‹åŒ–åº•ç›˜ç”µæœºè§’åº¦ç»“æ„ä½“
+ * @param[out]     chassis_move_init:"chassis_move"ç»“æ„ä½“æŒ‡é’ˆ
  * @retval         none
  */
 static void chassis_init(chassis_move_t *chassis_move_init)
@@ -217,57 +214,57 @@ static void chassis_init(chassis_move_t *chassis_move_init)
     }
     memset(chassis_move_init, 0, sizeof(chassis_move_t));
 
-    // ³õÊ¼»¯µç»úËÙ¶ÈPIDÖµ
+    // åˆå§‹åŒ–ç”µæœºé€Ÿåº¦PIDå€¼
     const static fp32 motor_speed_pid[3] = {M3505_MOTOR_SPEED_PID_KP, M3505_MOTOR_SPEED_PID_KI, M3505_MOTOR_SPEED_PID_KD};
-    // ³õÊ¼»¯µ×ÅÌ½Ç¶ÈPIDÖµ
+    // åˆå§‹åŒ–åº•ç›˜è§’åº¦PIDå€¼
     const static fp32 chassis_yaw_pid[3] = {CHASSIS_FOLLOW_GIMBAL_PID_KP, CHASSIS_FOLLOW_GIMBAL_PID_KI, CHASSIS_FOLLOW_GIMBAL_PID_KD};
-    // ¹¦ÂÊ»º³åPID
-    const static fp32 power_buffer_pid[3] = {M3505_MOTOR_POWER_PID_KP, M3505_MOTOR_POWER_PID_KI, M3505_MOTOR_POWER_PID_KD}; // ¹¦ÂÊ»·PID²ÎÊı
+    // åŠŸç‡ç¼“å†²PID
+    const static fp32 power_buffer_pid[3] = {M3505_MOTOR_POWER_PID_KP, M3505_MOTOR_POWER_PID_KI, M3505_MOTOR_POWER_PID_KD}; // åŠŸç‡ç¯PIDå‚æ•°
 
-    // µ×ÅÌÄ£Ê½ÎªÔ­Ê¼
+    // åº•ç›˜æ¨¡å¼ä¸ºåŸå§‹
     chassis_move_init->chassis_mode = CHASSIS_VECTOR_RAW;
     // get gyro sensor euler angle point
-    // »ñÈ¡¹ßĞÔµ¼º½×ËÌ¬½ÇÖ¸Õë
+    // è·å–æƒ¯æ€§å¯¼èˆªå§¿æ€è§’æŒ‡é’ˆ
     chassis_move_init->chassis_INS_point = get_INS_point();
-    // »ñÈ¡µçÈİÊı¾İÖ¸Õë
+    // è·å–ç”µå®¹æ•°æ®æŒ‡é’ˆ
     chassis_move_init->cap_data = get_cap_data_point();
-    // »ñÈ¡»úÆ÷ÈË×´Ì¬Ö¸Õë
+    // è·å–æœºå™¨äººçŠ¶æ€æŒ‡é’ˆ
     chassis_move_init->robot_state = get_robot_status_point();
     chassis_move_init->power_heat_data = get_power_heat_data_point();
     chassis_move_init->shoot_data = get_shoot_data_point();
 
     uint8_t i;
-    // »ñÈ¡µ×ÅÌµç»ú²âÁ¿ÖµÖ¸Õë£¬³õÊ¼»¯PID
+    // è·å–åº•ç›˜ç”µæœºæµ‹é‡å€¼æŒ‡é’ˆï¼Œåˆå§‹åŒ–PID
     for (i = 0; i < 4; i++)
     {
         chassis_move_init->motor_chassis[i].chassis_motor_measure = get_chassis_motor_measure_point(i);
         PID_init(&chassis_move_init->motor_speed_pid[i], PID_POSITION, motor_speed_pid, M3505_MOTOR_SPEED_PID_MAX_OUT, M3505_MOTOR_SPEED_PID_MAX_IOUT);
     }
-    // ³õÊ¼»¯½Ç¶ÈPID
+    // åˆå§‹åŒ–è§’åº¦PID
     PID_init(&chassis_move_init->chassis_angle_pid, PID_POSITION, chassis_yaw_pid, CHASSIS_FOLLOW_GIMBAL_PID_MAX_OUT, CHASSIS_FOLLOW_GIMBAL_PID_MAX_IOUT);
-    // ¹¦ÂÊ»·PID
+    // åŠŸç‡ç¯PID
     PID_init(&chassis_move_init->buffer_pid, PID_POSITION, power_buffer_pid, M3505_MOTOR_POWER_PID_MAX_OUT, M3505_MOTOR_POWER_PID_MAX_IOUT);
 
     // ============================================================
-    // È«Ïò¶æÂÖ³õÊ¼»¯
+    // å…¨å‘èˆµè½®åˆå§‹åŒ–
     // ============================================================
-    // PID ²ÎÊıÊı×é
+    // PID å‚æ•°æ•°ç»„
     const static fp32 rudder_angle_pid[3] = {RUDDER_ANGLE_PID_KP, RUDDER_ANGLE_PID_KI, RUDDER_ANGLE_PID_KD};
     const static fp32 rudder_speed_pid[3] = {RUDDER_SPEED_PID_KP, RUDDER_SPEED_PID_KI, RUDDER_SPEED_PID_KD};
 
-    // °ó¶¨ GM6020 Êı¾İÖ¸Õë
+    // ç»‘å®š GM6020 æ•°æ®æŒ‡é’ˆ
     chassis_move_init->Forward_L.gimbal_motor_measure = get_rudder_motor_measure_point(0);
     chassis_move_init->Forward_R.gimbal_motor_measure = get_rudder_motor_measure_point(1);
     chassis_move_init->Back_L.gimbal_motor_measure    = get_rudder_motor_measure_point(2);
     chassis_move_init->Back_R.gimbal_motor_measure    = get_rudder_motor_measure_point(3);
 
-    // ÉèÖÃÁãµã±àÂëÆ÷Öµ£¨±ê¶¨Öµ£¬Ğè¸ù¾İÊµ¼Ê°²×°µ÷Õû£©
+    // è®¾ç½®é›¶ç‚¹ç¼–ç å™¨å€¼ï¼ˆæ ‡å®šå€¼ï¼Œéœ€æ ¹æ®å®é™…å®‰è£…è°ƒæ•´ï¼‰
     chassis_move_init->Forward_L.ecd_zero_set = Forward_L_ecd;
     chassis_move_init->Forward_R.ecd_zero_set = Forward_R_ecd;
     chassis_move_init->Back_L.ecd_zero_set    = Back_L_ecd;
     chassis_move_init->Back_R.ecd_zero_set    = Back_R_ecd;
 
-    // ³õÊ¼»¯¸÷¶æÂÖ¼¶Áª PID£¨Íâ»·½Ç¶È + ÄÚ»·ËÙ¶È£©
+    // åˆå§‹åŒ–å„èˆµè½®çº§è” PIDï¼ˆå¤–ç¯è§’åº¦ + å†…ç¯é€Ÿåº¦ï¼‰
     PID_init(&chassis_move_init->Forward_L.angle_pid, PID_POSITION, rudder_angle_pid, RUDDER_ANGLE_PID_MAX_OUT, RUDDER_ANGLE_PID_MAX_IOUT);
     PID_init(&chassis_move_init->Forward_L.speed_pid, PID_POSITION, rudder_speed_pid, RUDDER_SPEED_PID_MAX_OUT, RUDDER_SPEED_PID_MAX_IOUT);
     PID_init(&chassis_move_init->Forward_R.angle_pid, PID_POSITION, rudder_angle_pid, RUDDER_ANGLE_PID_MAX_OUT, RUDDER_ANGLE_PID_MAX_IOUT);
@@ -277,40 +274,40 @@ static void chassis_init(chassis_move_t *chassis_move_init)
     PID_init(&chassis_move_init->Back_R.angle_pid, PID_POSITION, rudder_angle_pid, RUDDER_ANGLE_PID_MAX_OUT, RUDDER_ANGLE_PID_MAX_IOUT);
     PID_init(&chassis_move_init->Back_R.speed_pid, PID_POSITION, rudder_speed_pid, RUDDER_SPEED_PID_MAX_OUT, RUDDER_SPEED_PID_MAX_IOUT);
 
-    // ³õÊ¼»¯·½ÏòÏµÊıÎªÕıÏò
+    // åˆå§‹åŒ–æ–¹å‘ç³»æ•°ä¸ºæ­£å‘
     chassis_move_init->Forward_L.Judge_Speed_Direction = 1.0f;
     chassis_move_init->Forward_R.Judge_Speed_Direction = 1.0f;
     chassis_move_init->Back_L.Judge_Speed_Direction    = 1.0f;
     chassis_move_init->Back_R.Judge_Speed_Direction    = 1.0f;
 
-    // ÏŞÖÆ×î´ó×îĞ¡ËÙ¶È
+    // é™åˆ¶æœ€å¤§æœ€å°é€Ÿåº¦
     chassis_move_init->vx_max_speed = NORMAL_MAX_CHASSIS_SPEED_X;
     chassis_move_init->vx_min_speed = -NORMAL_MAX_CHASSIS_SPEED_X;
 
     chassis_move_init->vy_max_speed = NORMAL_MAX_CHASSIS_SPEED_Y;
     chassis_move_init->vy_min_speed = -NORMAL_MAX_CHASSIS_SPEED_Y;
 	
-	//³õÊ¼»¯ Å¤×ªÏà¹Ø
+	//åˆå§‹åŒ– æ‰­è½¬ç›¸å…³
 	chassis_move_init->twist_init_flag = 0;
 	chassis_move_init->change_twist_flag = 0;
 
-    // ¸üĞÂÒ»´Î·´À¡Êı¾İ
+    // æ›´æ–°ä¸€æ¬¡åé¦ˆæ•°æ®
     chassis_feedback_update(chassis_move_init);
 }
 
 /**
- * @brief          ½â°üÍ¨ĞÅÊı¾İ
- * @param[out]     unpack_comm_data:"chassis_move"½á¹¹ÌåÖ¸Õë
+ * @brief          è§£åŒ…é€šä¿¡æ•°æ®
+ * @param[out]     unpack_comm_data:"chassis_move"ç»“æ„ä½“æŒ‡é’ˆ
  * @retval         none
  */
 extern int8_t R, QA, BPIN, AUTO_ATTACK, STUCK, VISION, FOLLOW, TURN_REMOTE_FIRE;
 void chassis_get_comm_data(chassis_move_t *receive_comm_data)
 {
-    /* AÍ¨µÀ */
+    /* Aé€šé“ */
     receive_comm_data->vx_set = receive_comm_data->comm_rx_A.rx_vx_set;
     receive_comm_data->vy_set = receive_comm_data->comm_rx_A.rx_vy_set;
 
-    /* BÍ¨µÀ */
+    /* Bé€šé“ */
     // vz_set
     receive_comm_data->wz_set = receive_comm_data->comm_rx_B.rx_vz_set;
 
@@ -327,9 +324,9 @@ void chassis_get_comm_data(chassis_move_t *receive_comm_data)
 	else
 		TURN_REMOTE_FIRE = 0;
 	
-    // ±êÖ¾Î»
+    // æ ‡å¿—ä½
 
-    // µ×ÅÌÄ£Ê½(µÍ4Î»È¡³öÀ´,×î¶à16ÖÖÄ£Ê½) Ç°4Î»Îª±êÖ¾Î»
+    // åº•ç›˜æ¨¡å¼(ä½4ä½å–å‡ºæ¥,æœ€å¤š16ç§æ¨¡å¼) å‰4ä½ä¸ºæ ‡å¿—ä½
     receive_comm_data->rx_chassis_mode = receive_comm_data->comm_rx_B.rx_chassis_mode & 0x0F;
     if (receive_comm_data->rx_chassis_mode == 0)
         receive_comm_data->chassis_mode = CHASSIS_VECTOR_RAW;
@@ -347,17 +344,17 @@ void chassis_get_comm_data(chassis_move_t *receive_comm_data)
         receive_comm_data->chassis_mode = CHASSIS_VECTOR_TURN_ROUND;
 	else
 		receive_comm_data->chassis_mode = CHASSIS_VECTOR_RAW;
-        // ÅĞ¶ÏÊÇ·ñ¸úËæÄ£Ê½
+        // åˆ¤æ–­æ˜¯å¦è·Ÿéšæ¨¡å¼
         if (receive_comm_data->chassis_mode == CHASSIS_VECTOR_FOLLOW_GIMBAL_YAW)
             FOLLOW = 1;
         else
             FOLLOW = 0;
-        //°´¼üZ
+        //æŒ‰é”®Z
         if (receive_comm_data->comm_rx_B.rx_chassis_mode & COMM_FLAG_Z)
             KEY_z = 1;
         else
             KEY_z = 0;
-		//°´¼üQ
+		//æŒ‰é”®Q
         if (receive_comm_data->comm_rx_B.rx_chassis_mode & COMM_FLAG_Q)
             KEY_q = 1;
         else
@@ -367,8 +364,8 @@ void chassis_get_comm_data(chassis_move_t *receive_comm_data)
 //        else
 //            turn_flags = 0;
 
-    // ÆäËûFlag
-    if (receive_comm_data->comm_rx_B.rx_Flag & COMM_FLAG_SHIFT)//°´ÏÂSHIFT
+    // å…¶ä»–Flag
+    if (receive_comm_data->comm_rx_B.rx_Flag & COMM_FLAG_SHIFT)//æŒ‰ä¸‹SHIFT
         KEY_shift = 1;
     else
         KEY_shift = 0;
@@ -401,8 +398,8 @@ void chassis_get_comm_data(chassis_move_t *receive_comm_data)
     else
         DBUS_error_flag = 0;
 
-    /* CÍ¨µÀ */
-	static int16_t rx_first_speed_tmp[10] = {0}; // È¡ÖµÂË²¨,ÔİÊ±Ã»Ğ´
+    /* Cé€šé“ */
+	static int16_t rx_first_speed_tmp[10] = {0}; // å–å€¼æ»¤æ³¢,æš‚æ—¶æ²¡å†™
 	static int16_t rx_back_speed_tmp[10] = {0}; 
 	static int16_t j,k = 0;
 	
@@ -431,9 +428,9 @@ void chassis_get_comm_data(chassis_move_t *receive_comm_data)
 
 
 /**
- * @brief          ¸üĞÂµ×ÅÌ·´À¡Êı¾İ£¬¶ÁÈ¡µç»úËÙ¶È¡¢±àÂëÆ÷½Ç¶È£¬
- *                 ¼ÆËã»úÌåËÙ¶È¡¢½Ç¶È£¬ÒÔ¼°IMU×ËÌ¬
- * @param[out]     chassis_move_update:"chassis_move"½á¹¹ÌåÖ¸Õë
+ * @brief          æ›´æ–°åº•ç›˜åé¦ˆæ•°æ®ï¼Œè¯»å–ç”µæœºé€Ÿåº¦ã€ç¼–ç å™¨è§’åº¦ï¼Œ
+ *                 è®¡ç®—æœºä½“é€Ÿåº¦ã€è§’åº¦ï¼Œä»¥åŠIMUå§¿æ€
+ * @param[out]     chassis_move_update:"chassis_move"ç»“æ„ä½“æŒ‡é’ˆ
  * @retval         none
  */
 static void chassis_feedback_update(chassis_move_t *chassis_move_update)
@@ -442,7 +439,7 @@ static void chassis_feedback_update(chassis_move_t *chassis_move_update)
     {
         return;
     }
-    // UIÏÔÊ¾µ×ÅÌ½Ç¶È
+    // UIæ˜¾ç¤ºåº•ç›˜è§’åº¦
     anglesr = abs((int)(chassis_move.chassis_yaw_motor->relative_angle * 100));
     if (anglesr > 157 && anglesr < 314)
     {
@@ -452,17 +449,17 @@ static void chassis_feedback_update(chassis_move_t *chassis_move_update)
     uint8_t i = 0;
     for (i = 0; i < 4; i++)
     {
-        // µç»úËÙ¶È¡¢¼ÓËÙ¶È¡¢PIDÎ¢·ÖÏî
+        // ç”µæœºé€Ÿåº¦ã€åŠ é€Ÿåº¦ã€PIDå¾®åˆ†é¡¹
         chassis_move_update->motor_chassis[i].speed = CHASSIS_MOTOR_RPM_TO_VECTOR_SEN * chassis_move_update->motor_chassis[i].chassis_motor_measure->speed_rpm;
         chassis_move_update->motor_chassis[i].accel = chassis_move_update->motor_speed_pid[i].Dbuf[0] * CHASSIS_CONTROL_FREQUENCE; //
     }
 
-    // ¼ÆËã»úÌåËÙ¶È vx, vy, wz (»ùÓÚµç»úËÙ¶È½âËã£¬×ø±êÏµÎª»úÌå×ø±êÏµ)
+    // è®¡ç®—æœºä½“é€Ÿåº¦ vx, vy, wz (åŸºäºç”µæœºé€Ÿåº¦è§£ç®—ï¼Œåæ ‡ç³»ä¸ºæœºä½“åæ ‡ç³»)
     // chassis_move_update->vx = (-chassis_move_update->motor_chassis[0].speed + chassis_move_update->motor_chassis[1].speed + chassis_move_update->motor_chassis[2].speed - chassis_move_update->motor_chassis[3].speed) * MOTOR_SPEED_TO_CHASSIS_SPEED_VX;
     // chassis_move_update->vy = (-chassis_move_update->motor_chassis[0].speed - chassis_move_update->motor_chassis[1].speed + chassis_move_update->motor_chassis[2].speed + chassis_move_update->motor_chassis[3].speed) * MOTOR_SPEED_TO_CHASSIS_SPEED_VY;
     // chassis_move_update->wz = (-chassis_move_update->motor_chassis[0].speed - chassis_move_update->motor_chassis[1].speed - chassis_move_update->motor_chassis[2].speed - chassis_move_update->motor_chassis[3].speed) * MOTOR_SPEED_TO_CHASSIS_SPEED_WZ / MOTOR_DISTANCE_TO_CENTER;
 
-    //    //¼ÆËã»úÌå½Ç¶È£¬ĞèÒª½áºÏÔÆÌ¨µç»ú½Ç¶È
+    //    //è®¡ç®—æœºä½“è§’åº¦ï¼Œéœ€è¦ç»“åˆäº‘å°ç”µæœºè§’åº¦
     //    chassis_move_update->chassis_yaw = rad_format(*(chassis_move_update->chassis_INS_angle + INS_YAW_ADDRESS_OFFSET) - chassis_move_update->chassis_yaw_motor->relative_angle);
     //    chassis_move_update->chassis_pitch = rad_format(*(chassis_move_update->chassis_INS_angle + INS_PITCH_ADDRESS_OFFSET) - chassis_move_update->chassis_pitch_motor->relative_angle);
     //    chassis_move_update->chassis_roll = *(chassis_move_update->chassis_INS_angle + INS_ROLL_ADDRESS_OFFSET);
@@ -471,37 +468,37 @@ static void chassis_feedback_update(chassis_move_t *chassis_move_update)
     chassis_move_update->chassis_roll  = chassis_move_update->chassis_INS_point->Roll;
 
     // ============================================================
-    // ¸üĞÂÈ«Ïò¶æÂÖµç»úÊı¾İ
+    // æ›´æ–°å…¨å‘èˆµè½®ç”µæœºæ•°æ®
     // ============================================================
     chassis_move_update->Forward_L.motor_speed = chassis_move_update->Forward_L.gimbal_motor_measure->speed_rpm;
     chassis_move_update->Forward_R.motor_speed = chassis_move_update->Forward_R.gimbal_motor_measure->speed_rpm;
     chassis_move_update->Back_L.motor_speed    = chassis_move_update->Back_L.gimbal_motor_measure->speed_rpm;
     chassis_move_update->Back_R.motor_speed    = chassis_move_update->Back_R.gimbal_motor_measure->speed_rpm;
 
-    // ¶æÂÖÏßËÙ¶È (m/s)
+    // èˆµè½®çº¿é€Ÿåº¦ (m/s)
     chassis_move_update->rudder_speed[0] = chassis_move_update->Forward_L.gimbal_motor_measure->speed_rpm * GM6020_RPM_TO_VECTOR;
     chassis_move_update->rudder_speed[1] = chassis_move_update->Forward_R.gimbal_motor_measure->speed_rpm * GM6020_RPM_TO_VECTOR;
     chassis_move_update->rudder_speed[2] = chassis_move_update->Back_L.gimbal_motor_measure->speed_rpm    * GM6020_RPM_TO_VECTOR;
     chassis_move_update->rudder_speed[3] = chassis_move_update->Back_R.gimbal_motor_measure->speed_rpm    * GM6020_RPM_TO_VECTOR;
 
-    // ¶æÂÖ½ÇËÙ¶È (rad/s)
+    // èˆµè½®è§’é€Ÿåº¦ (rad/s)
     chassis_move_update->rudder_omega[0] = RpmToOmega(chassis_move_update->Forward_L.gimbal_motor_measure->speed_rpm);
     chassis_move_update->rudder_omega[1] = RpmToOmega(chassis_move_update->Forward_R.gimbal_motor_measure->speed_rpm);
     chassis_move_update->rudder_omega[2] = RpmToOmega(chassis_move_update->Back_L.gimbal_motor_measure->speed_rpm);
     chassis_move_update->rudder_omega[3] = RpmToOmega(chassis_move_update->Back_R.gimbal_motor_measure->speed_rpm);
 
-    // ±àÂëÆ÷ÔöÁ¿»º´æ
+    // ç¼–ç å™¨å¢é‡ç¼“å­˜
     chassis_move_update->Encoder_add[0] = chassis_move_update->Forward_L.ecd_add;
     chassis_move_update->Encoder_add[1] = chassis_move_update->Forward_R.ecd_add;
     chassis_move_update->Encoder_add[2] = chassis_move_update->Back_L.ecd_add;
     chassis_move_update->Encoder_add[3] = chassis_move_update->Back_R.ecd_add;
 }
 /**
- * @brief          ½«Ò£¿ØÆ÷Í¨µÀÖµ×ª»»Îªµ×ÅÌËÙ¶ÈÏòÁ¿
+ * @brief          å°†é¥æ§å™¨é€šé“å€¼è½¬æ¢ä¸ºåº•ç›˜é€Ÿåº¦å‘é‡
  *
- * @param[out]     vx_set: x·½ÏòËÙ¶ÈÖ¸Õë
- * @param[out]     vy_set: y·½ÏòËÙ¶ÈÖ¸Õë
- * @param[out]     chassis_move_rc_to_vector: "chassis_move" ½á¹¹ÌåÖ¸Õë
+ * @param[out]     vx_set: xæ–¹å‘é€Ÿåº¦æŒ‡é’ˆ
+ * @param[out]     vy_set: yæ–¹å‘é€Ÿåº¦æŒ‡é’ˆ
+ * @param[out]     chassis_move_rc_to_vector: "chassis_move" ç»“æ„ä½“æŒ‡é’ˆ
  * @retval         none
  */
 void chassis_rc_to_control_vector(fp32 *vx_set, fp32 *vy_set, chassis_move_t *chassis_move_rc_to_vector)
@@ -513,7 +510,7 @@ void chassis_rc_to_control_vector(fp32 *vx_set, fp32 *vy_set, chassis_move_t *ch
 
     int16_t vx_channel, vy_channel;
     fp32 vx_set_channel, vy_set_channel;
-    // Ò£¿ØÆ÷ËÀÇø´¦Àí£¬³¬³öËÀÇøµÄÖµ²ÅÓĞĞ§
+    // é¥æ§å™¨æ­»åŒºå¤„ç†ï¼Œè¶…å‡ºæ­»åŒºçš„å€¼æ‰æœ‰æ•ˆ
     rc_deadband_limit(chassis_move_rc_to_vector->chassis_RC->rc.ch[CHASSIS_X_CHANNEL], vx_channel, CHASSIS_RC_DEADLINE);
     rc_deadband_limit(chassis_move_rc_to_vector->chassis_RC->rc.ch[CHASSIS_Y_CHANNEL], vy_channel, CHASSIS_RC_DEADLINE);
 
@@ -522,7 +519,7 @@ void chassis_rc_to_control_vector(fp32 *vx_set, fp32 *vy_set, chassis_move_t *ch
     vx_set_channel = vx_channel * CHASSIS_VX_RC_SEN;
     vy_set_channel = vy_channel * CHASSIS_VY_RC_SEN;
 
-    // ¼üÅÌ¿ØÖÆ
+    // é”®ç›˜æ§åˆ¶
     if (chassis_move_rc_to_vector->chassis_RC->key.v & CHASSIS_FRONT_KEY)
     {
         vx_set_channel = chassis_move_rc_to_vector->vx_max_speed;
@@ -541,10 +538,10 @@ void chassis_rc_to_control_vector(fp32 *vx_set, fp32 *vy_set, chassis_move_t *ch
         vy_set_channel = chassis_move_rc_to_vector->vy_min_speed;
     }
 
-    // Ò»½×µÍÍ¨ÂË²¨£¬Ê¹ËÙ¶È±ä»¯Æ½»¬
+    // ä¸€é˜¶ä½é€šæ»¤æ³¢ï¼Œä½¿é€Ÿåº¦å˜åŒ–å¹³æ»‘
     first_order_filter_cali(&chassis_move_rc_to_vector->chassis_cmd_slow_set_vx, vx_set_channel);
     first_order_filter_cali(&chassis_move_rc_to_vector->chassis_cmd_slow_set_vy, vy_set_channel);
-    // Í£Ö¹×´Ì¬ÏÂ£¬Ö±½ÓÖÃÁãËÙ¶È
+    // åœæ­¢çŠ¶æ€ä¸‹ï¼Œç›´æ¥ç½®é›¶é€Ÿåº¦
     if (vx_set_channel < CHASSIS_RC_DEADLINE * CHASSIS_VX_RC_SEN && vx_set_channel > -CHASSIS_RC_DEADLINE * CHASSIS_VX_RC_SEN)
     {
         chassis_move_rc_to_vector->chassis_cmd_slow_set_vx.out = 0.0f;
@@ -566,10 +563,10 @@ void chassis_rc_to_control_vector(fp32 *vx_set, fp32 *vy_set, chassis_move_t *ch
 }
 
 /**
- * @brief          È«Ïò¶æÂÖÔË¶¯Ñ§·Ö½â£º½« vx/vy/wz ·Ö½âÎª¸÷ÂÖËÙ¶ÈÄ¿±êºÍ¶æÂÖÄ¿±ê½Ç¶È
- *                 ¼ÙÉèËÄÂÖ¾ùÔÈ·Ö²¼£¬·½Î»½Ç¸÷Îª 45¡ã£¨Õı·½ĞÎµ×ÅÌ½üËÆ£©¡£
- *                 ½á¹ûĞ´Èë chassis_move.Forward_L/R, Back_L/R µÄ wheel_speed/rudder_angle/ecd_add¡£
- * @param[in/out]  chassic_rudder_preliminary_solution: chassis_move Ö¸Õë
+ * @brief          å…¨å‘èˆµè½®è¿åŠ¨å­¦åˆ†è§£ï¼šå°† vx/vy/wz åˆ†è§£ä¸ºå„è½®é€Ÿåº¦ç›®æ ‡å’Œèˆµè½®ç›®æ ‡è§’åº¦
+ *                 å‡è®¾å››è½®å‡åŒ€åˆ†å¸ƒï¼Œæ–¹ä½è§’å„ä¸º 45Â°ï¼ˆæ­£æ–¹å½¢åº•ç›˜è¿‘ä¼¼ï¼‰ã€‚
+ *                 ç»“æœå†™å…¥ chassis_move.Forward_L/R, Back_L/R çš„ wheel_speed/rudder_angle/ecd_addã€‚
+ * @param[in/out]  chassic_rudder_preliminary_solution: chassis_move æŒ‡é’ˆ
  * @retval         none
  */
 static void chassic_rudder_preliminary_A_S_solution(chassis_move_t *chassic_rudder_preliminary_solution)
@@ -579,31 +576,31 @@ static void chassic_rudder_preliminary_A_S_solution(chassis_move_t *chassic_rudd
     vy_set = chassic_rudder_preliminary_solution->vy_set;
     vw_set = chassic_rudder_preliminary_solution->wz_set;
 
-    // ±£´æÉÏÒ»ÖÜÆÚ¶æÂÖ½Ç¶È
+    // ä¿å­˜ä¸Šä¸€å‘¨æœŸèˆµè½®è§’åº¦
     chassic_rudder_preliminary_solution->Forward_L.last_rudder_angle = chassic_rudder_preliminary_solution->Forward_L.rudder_angle;
     chassic_rudder_preliminary_solution->Forward_R.last_rudder_angle = chassic_rudder_preliminary_solution->Forward_R.rudder_angle;
     chassic_rudder_preliminary_solution->Back_L.last_rudder_angle    = chassic_rudder_preliminary_solution->Back_L.rudder_angle;
     chassic_rudder_preliminary_solution->Back_R.last_rudder_angle    = chassic_rudder_preliminary_solution->Back_R.rudder_angle;
 
-    // ¼ÆËã¸÷ÂÖºÏËÙ¶È´óĞ¡£¨Forward_R È¡¸º±£Ö¤Õı·½ÏòÒ»ÖÂ£©
+    // è®¡ç®—å„è½®åˆé€Ÿåº¦å¤§å°ï¼ˆForward_R å–è´Ÿä¿è¯æ­£æ–¹å‘ä¸€è‡´ï¼‰
     chassic_rudder_preliminary_solution->Forward_L.wheel_speed =  sqrt(pow((vy_set + vw_set * arm_cos_f32(DEG2R(45))), 2) + pow((vx_set + vw_set * arm_sin_f32(DEG2R(45))), 2));
     chassic_rudder_preliminary_solution->Back_L.wheel_speed    =  sqrt(pow((vy_set - vw_set * arm_cos_f32(DEG2R(45))), 2) + pow((vx_set + vw_set * arm_sin_f32(DEG2R(45))), 2));
     chassic_rudder_preliminary_solution->Back_R.wheel_speed    =  sqrt(pow((vy_set - vw_set * arm_cos_f32(DEG2R(45))), 2) + pow((vx_set - vw_set * arm_sin_f32(DEG2R(45))), 2));
     chassic_rudder_preliminary_solution->Forward_R.wheel_speed = -sqrt(pow((vy_set + vw_set * arm_cos_f32(DEG2R(45))), 2) + pow((vx_set - vw_set * arm_sin_f32(DEG2R(45))), 2));
 
-    // ¼ÆËã¸÷ÂÖ¶æÂÖÄ¿±ê½Ç¶È (rad)£¬ÓÉËÙ¶È·½Ïò¾ö¶¨
+    // è®¡ç®—å„è½®èˆµè½®ç›®æ ‡è§’åº¦ (rad)ï¼Œç”±é€Ÿåº¦æ–¹å‘å†³å®š
     chassic_rudder_preliminary_solution->Forward_L.rudder_angle = atan2((vy_set + vw_set * arm_cos_f32(DEG2R(45))), (vx_set + vw_set * arm_sin_f32(DEG2R(45))));
     chassic_rudder_preliminary_solution->Back_L.rudder_angle    = atan2((vy_set - vw_set * arm_cos_f32(DEG2R(45))), (vx_set + vw_set * arm_sin_f32(DEG2R(45))));
     chassic_rudder_preliminary_solution->Back_R.rudder_angle    = atan2((vy_set - vw_set * arm_cos_f32(DEG2R(45))), (vx_set - vw_set * arm_sin_f32(DEG2R(45))));
     chassic_rudder_preliminary_solution->Forward_R.rudder_angle = atan2((vy_set + vw_set * arm_cos_f32(DEG2R(45))), (vx_set - vw_set * arm_sin_f32(DEG2R(45))));
 
-    // ½«»¡¶È½Ç¶È×ª»»Îª±àÂëÆ÷ÔöÁ¿
+    // å°†å¼§åº¦è§’åº¦è½¬æ¢ä¸ºç¼–ç å™¨å¢é‡
     chassic_rudder_preliminary_solution->Forward_L.ecd_add = (int16_t)(chassic_rudder_preliminary_solution->Forward_L.rudder_angle / Motor_Ecd_to_Rad);
     chassic_rudder_preliminary_solution->Forward_R.ecd_add = (int16_t)(chassic_rudder_preliminary_solution->Forward_R.rudder_angle / Motor_Ecd_to_Rad);
     chassic_rudder_preliminary_solution->Back_L.ecd_add    = (int16_t)(chassic_rudder_preliminary_solution->Back_L.rudder_angle    / Motor_Ecd_to_Rad);
     chassic_rudder_preliminary_solution->Back_R.ecd_add    = (int16_t)(chassic_rudder_preliminary_solution->Back_R.rudder_angle    / Motor_Ecd_to_Rad);
 
-    // ±£´æÔöÁ¿£¨±¸ÓÃ£©
+    // ä¿å­˜å¢é‡ï¼ˆå¤‡ç”¨ï¼‰
     chassic_rudder_preliminary_solution->Forward_L.last_ecd_add = chassic_rudder_preliminary_solution->Forward_L.ecd_add;
     chassic_rudder_preliminary_solution->Forward_R.last_ecd_add = chassic_rudder_preliminary_solution->Forward_R.ecd_add;
     chassic_rudder_preliminary_solution->Back_L.last_ecd_add    = chassic_rudder_preliminary_solution->Back_L.ecd_add;
@@ -611,8 +608,8 @@ static void chassic_rudder_preliminary_A_S_solution(chassis_move_t *chassic_rudd
 }
 
 /**
- * @brief          ¶æÂÖ½Ç¶È¿ØÖÆÖ÷Ñ­»·£¨Çı¶¯4¸öGM6020£©
- * @param[in/out]  rudder_move_control_loop: chassis_move Ö¸Õë
+ * @brief          èˆµè½®è§’åº¦æ§åˆ¶ä¸»å¾ªç¯ï¼ˆé©±åŠ¨4ä¸ªGM6020ï¼‰
+ * @param[in/out]  rudder_move_control_loop: chassis_move æŒ‡é’ˆ
  * @retval         none
  */
 static void rudder_control_loop(chassis_move_t *rudder_move_control_loop)
@@ -624,19 +621,19 @@ static void rudder_control_loop(chassis_move_t *rudder_move_control_loop)
 }
 
 /**
- * @brief          µ¥¸ö¶æÂÖÏà¶Ô½Ç¶È¼ÆËãÓë·½Ïò´¦Àí
- *                 - ¼ÆËã×î¶ÌÂ·³ÌµÄ ecd_error
- *                 - ³¬90¡ãÊ±·´×ªÂÖËÙ·½Ïò²¢¼õĞ¡½Ç¶È
- *                 - ¼ÆËã cos3 Ë¥¼õÏµÊı¼õĞ¡µ÷ÏòÊ±ÂÖËÙ¶¶¶¯
- *                 - µ÷ÓÃ RUDDER_MOTOR_PID_CONTROL Êä³öµçÁ÷
- * @param[in/out]  chassis_motor: µ¥¸ö¶æÂÖ½á¹¹ÌåÖ¸Õë
+ * @brief          å•ä¸ªèˆµè½®ç›¸å¯¹è§’åº¦è®¡ç®—ä¸æ–¹å‘å¤„ç†
+ *                 - è®¡ç®—æœ€çŸ­è·¯ç¨‹çš„ ecd_error
+ *                 - è¶…90Â°æ—¶åè½¬è½®é€Ÿæ–¹å‘å¹¶å‡å°è§’åº¦
+ *                 - è®¡ç®— cos3 è¡°å‡ç³»æ•°å‡å°è°ƒå‘æ—¶è½®é€ŸæŠ–åŠ¨
+ *                 - è°ƒç”¨ RUDDER_MOTOR_PID_CONTROL è¾“å‡ºç”µæµ
+ * @param[in/out]  chassis_motor: å•ä¸ªèˆµè½®ç»“æ„ä½“æŒ‡é’ˆ
  * @retval         none
  */
 static void Rudder_motor_relative_angle_control(Rudder_Motor_t *chassis_motor)
 {
     float angle;
 
-    // ¼ÆËãÄ¿±ê±àÂëÆ÷¾ø¶ÔÖµ£¨Áãµã + ÔË¶¯Ñ§ÔöÁ¿£¬´¦ÀíÔ½½ç£©
+    // è®¡ç®—ç›®æ ‡ç¼–ç å™¨ç»å¯¹å€¼ï¼ˆé›¶ç‚¹ + è¿åŠ¨å­¦å¢é‡ï¼Œå¤„ç†è¶Šç•Œï¼‰
     if (chassis_motor->ecd_add > 0)
     {
         if (chassis_motor->ecd_zero_set + chassis_motor->ecd_add > 8191)
@@ -654,7 +651,7 @@ static void Rudder_motor_relative_angle_control(Rudder_Motor_t *chassis_motor)
     else if (fabs(chassis_move.vx_set) <= 0.05f && fabs(chassis_move.vy_set) <= 0.05f
              && chassis_move.chassis_mode != CHASSIS_VECTOR_BPIN)
     {
-        // Í£Ö¹Ê±±£³Öµ±Ç°½Ç¶È£¬·ÀÖ¹µÍËÙ¶¶¶¯
+        // åœæ­¢æ—¶ä¿æŒå½“å‰è§’åº¦ï¼Œé˜²æ­¢ä½é€ŸæŠ–åŠ¨
         chassis_motor->ecd_set = chassis_motor->gimbal_motor_measure->ecd;
     }
     else
@@ -662,16 +659,16 @@ static void Rudder_motor_relative_angle_control(Rudder_Motor_t *chassis_motor)
         chassis_motor->ecd_set = chassis_motor->ecd_zero_set;
     }
 
-    // ¼ÆËã±àÂëÆ÷Îó²î
+    // è®¡ç®—ç¼–ç å™¨è¯¯å·®
     chassis_motor->ecd_error = chassis_motor->ecd_set - chassis_motor->gimbal_motor_measure->ecd;
 
-    // ´¦Àí¿çÔ½ÁãµãµÄ×î¶ÌÂ·³Ì
+    // å¤„ç†è·¨è¶Šé›¶ç‚¹çš„æœ€çŸ­è·¯ç¨‹
     if (chassis_motor->ecd_error > 4096)
         chassis_motor->ecd_error -= 8191;
     else if (chassis_motor->ecd_error < -4096)
         chassis_motor->ecd_error += 8191;
 
-    // ³¬¹ı 90¡ã Ê±·­×ªÂÖËÙ·½Ïò£¬²¢½«½Ç¶ÈÕÛµşÖÁ [-90¡ã, 90¡ã]
+    // è¶…è¿‡ 90Â° æ—¶ç¿»è½¬è½®é€Ÿæ–¹å‘ï¼Œå¹¶å°†è§’åº¦æŠ˜å è‡³ [-90Â°, 90Â°]
     if (chassis_motor->ecd_error > 2048)
     {
         chassis_motor->ecd_error -= 4096;
@@ -687,48 +684,48 @@ static void Rudder_motor_relative_angle_control(Rudder_Motor_t *chassis_motor)
         chassis_motor->Judge_Speed_Direction = 1.0f;
     }
 
-    // ¼ÆËã cos3 Ë¥¼õÏµÊı£¬½Ç²îÔ½´óÂÖËÙÔ½µÍ£¨·ÀÖ¹µ÷ÏòÊ±³åÁ¦¹ı´ó£©
+    // è®¡ç®— cos3 è¡°å‡ç³»æ•°ï¼Œè§’å·®è¶Šå¤§è½®é€Ÿè¶Šä½ï¼ˆé˜²æ­¢è°ƒå‘æ—¶å†²åŠ›è¿‡å¤§ï¼‰
     angle = (float)(chassis_motor->ecd_error) * Motor_Ecd_to_Rad;
     if (fabs(angle) > 90.0f)
-        angle = 90.0f; // ²»»á´¥·¢£¨×î´óÎó²îÔ¼1.57 rad < 90£©£¬±£Áô±£»¤
+        angle = 90.0f; // ä¸ä¼šè§¦å‘ï¼ˆæœ€å¤§è¯¯å·®çº¦1.57 rad < 90ï¼‰ï¼Œä¿ç•™ä¿æŠ¤
     else if (fabs(angle) < 0.5f && chassis_move.chassis_mode != CHASSIS_VECTOR_BPIN)
-        angle = 0.0f; // ËÀÇø£º¼«Ğ¡Îó²îÊ±Ö±½ÓÖÃÁã£¬·ÀÖ¹µÍËÙ²üÕñ
+        angle = 0.0f; // æ­»åŒºï¼šæå°è¯¯å·®æ—¶ç›´æ¥ç½®é›¶ï¼Œé˜²æ­¢ä½é€Ÿé¢¤æŒ¯
     chassis_motor->Judge_Speed_cosk = arm_cos_f32(angle) * arm_cos_f32(angle) * arm_cos_f32(angle);
 
     RUDDER_MOTOR_PID_CONTROL(chassis_motor);
 }
 
 /**
- * @brief          ¶æÂÖ·½Ïòµç»ú PID ¿ØÖÆ£¨¼¶Áª£º½Ç¶ÈÍâ»· + ËÙ¶ÈÄÚ»·£©
- *                 Ê¹ÓÃ Hero_Chasiss Ô­ÓĞ pid_type_def / PID_calc£¬
- *                 ¹¦ÄÜµÈĞ§ÓÚ Base_Board µÄ Matlab_PID_Calc ¼¶Áª PID¡£
- * @param[in/out]  rudder_motor: µ¥¸ö¶æÂÖ½á¹¹ÌåÖ¸Õë
+ * @brief          èˆµè½®æ–¹å‘ç”µæœº PID æ§åˆ¶ï¼ˆçº§è”ï¼šè§’åº¦å¤–ç¯ + é€Ÿåº¦å†…ç¯ï¼‰
+ *                 ä½¿ç”¨ Hero_Chasiss åŸæœ‰ pid_type_def / PID_calcï¼Œ
+ *                 åŠŸèƒ½ç­‰æ•ˆäº Base_Board çš„ Matlab_PID_Calc çº§è” PIDã€‚
+ * @param[in/out]  rudder_motor: å•ä¸ªèˆµè½®ç»“æ„ä½“æŒ‡é’ˆ
  * @retval         none
  */
 static void RUDDER_MOTOR_PID_CONTROL(Rudder_Motor_t *rudder_motor)
 {
-    // Íâ»·£º±àÂëÆ÷Îó²î ¡ú ËÙ¶ÈÉè¶¨ (PID_calc: error = set - ref = ecd_error - 0)
+    // å¤–ç¯ï¼šç¼–ç å™¨è¯¯å·® â†’ é€Ÿåº¦è®¾å®š (PID_calc: error = set - ref = ecd_error - 0)
     fp32 speed_set = PID_calc(&rudder_motor->angle_pid, 0.0f, (fp32)rudder_motor->ecd_error);
-    // ÄÚ»·£ºËÙ¶ÈÎó²î ¡ú µçÁ÷Êä³ö
+    // å†…ç¯ï¼šé€Ÿåº¦è¯¯å·® â†’ ç”µæµè¾“å‡º
     rudder_motor->given_current = (int16_t)PID_calc(&rudder_motor->speed_pid, rudder_motor->motor_speed, speed_set);
 }
 
 /**
- * @brief          ¶æÂÖ¹¦ÂÊ¿ØÖÆ£¨¼ò»¯°æ£ºÖ±½ÓµçÁ÷ÏŞ·ù£¬ÎŞ¸´ÔÓ¹¦ÂÊÔ¤²â£©
- *                 GM6020 ÔÚ´Ë¹¤³ÌÖĞÎŞ power_forecast/Power_reso_GM6020£¬
- *                 ½ö×ö [-16384, 16384] °²È«ÏŞ·ù²¢»ã×Ü rudder_given_current¡£
- * @param[in/out]  chassis_motor: chassis_move Ö¸Õë
+ * @brief          èˆµè½®åŠŸç‡æ§åˆ¶ï¼ˆç®€åŒ–ç‰ˆï¼šç›´æ¥ç”µæµé™å¹…ï¼Œæ— å¤æ‚åŠŸç‡é¢„æµ‹ï¼‰
+ *                 GM6020 åœ¨æ­¤å·¥ç¨‹ä¸­æ—  power_forecast/Power_reso_GM6020ï¼Œ
+ *                 ä»…åš [-16384, 16384] å®‰å…¨é™å¹…å¹¶æ±‡æ€» rudder_given_currentã€‚
+ * @param[in/out]  chassis_motor: chassis_move æŒ‡é’ˆ
  * @retval         none
  */
 void RUDDER_POWER_CONTROL(chassis_move_t *chassis_motor)
 {
-    // »ã×Ü¸÷¶æÂÖÊä³öµçÁ÷
+    // æ±‡æ€»å„èˆµè½®è¾“å‡ºç”µæµ
     chassis_motor->rudder_given_current[0] = chassis_motor->Forward_L.given_current;
     chassis_motor->rudder_given_current[1] = chassis_motor->Forward_R.given_current;
     chassis_motor->rudder_given_current[2] = chassis_motor->Back_L.given_current;
     chassis_motor->rudder_given_current[3] = chassis_motor->Back_R.given_current;
 
-    // °²È«ÏŞ·ù
+    // å®‰å…¨é™å¹…
     for (uint8_t i = 0; i < 4; i++)
     {
         if      (chassis_motor->rudder_given_current[i] >  16384.0f) chassis_motor->rudder_given_current[i] =  16384.0f;
@@ -737,9 +734,9 @@ void RUDDER_POWER_CONTROL(chassis_move_t *chassis_motor)
 }
 
 /**
- * @brief          ¿ØÖÆÑ­»·£ºÈ«Ïò¶æÂÖÔË¶¯Ñ§·Ö½â + ·½Ïòµç»ú½Ç¶È¿ØÖÆ + ÂÖËÙ PID
- *                 Ìæ´úÔ­ÂóÂÖ°æ±¾£¬±£Áô¹¦ÂÊ¿ØÖÆ¡¢ÏŞ·ùµÈËùÓĞÔ­Ê¼Âß¼­¡£
- * @param[out]     chassis_move_control_loop: "chassis_move" ½á¹¹ÌåÖ¸Õë
+ * @brief          æ§åˆ¶å¾ªç¯ï¼šå…¨å‘èˆµè½®è¿åŠ¨å­¦åˆ†è§£ + æ–¹å‘ç”µæœºè§’åº¦æ§åˆ¶ + è½®é€Ÿ PID
+ *                 æ›¿ä»£åŸéº¦è½®ç‰ˆæœ¬ï¼Œä¿ç•™åŠŸç‡æ§åˆ¶ã€é™å¹…ç­‰æ‰€æœ‰åŸå§‹é€»è¾‘ã€‚
+ * @param[out]     chassis_move_control_loop: "chassis_move" ç»“æ„ä½“æŒ‡é’ˆ
  * @retval         none
  */
 static void chassis_control_loop(chassis_move_t *chassis_move_control_loop)
@@ -748,13 +745,13 @@ static void chassis_control_loop(chassis_move_t *chassis_move_control_loop)
     fp32 temp = 0.0f;
     uint8_t i = 0;
 
-    // ¢Ù È«Ïò¶æÂÖÔË¶¯Ñ§·Ö½â£¨¼ÆËã¸÷ÂÖ wheel_speed / rudder_angle / ecd_add£©
+    // â‘  å…¨å‘èˆµè½®è¿åŠ¨å­¦åˆ†è§£ï¼ˆè®¡ç®—å„è½® wheel_speed / rudder_angle / ecd_addï¼‰
     chassic_rudder_preliminary_A_S_solution(chassis_move_control_loop);
 
-    // ¢Ú ¶æÂÖ·½Ïò¿ØÖÆ£¨GM6020 ½Ç¶È PID ¡ú given_current£©
+    // â‘¡ èˆµè½®æ–¹å‘æ§åˆ¶ï¼ˆGM6020 è§’åº¦ PID â†’ given_currentï¼‰
     rudder_control_loop(chassis_move_control_loop);
 
-    // RAW Ä£Ê½£ºÖ±½Ó·¢ËÍ0£¬¶æÂÖÈÔ»áÔË¶¯µ½Ä¿±ê½Ç¶È
+    // RAW æ¨¡å¼ï¼šç›´æ¥å‘é€0ï¼Œèˆµè½®ä»ä¼šè¿åŠ¨åˆ°ç›®æ ‡è§’åº¦
     if (chassis_move_control_loop->chassis_mode == CHASSIS_VECTOR_RAW)
     {
         for (i = 0; i < 4; i++)
@@ -762,8 +759,8 @@ static void chassis_control_loop(chassis_move_t *chassis_move_control_loop)
         return;
     }
 
-    // ¢Û ¸ù¾İ¶æÂÖ½Ç²îË¥¼õÏµÊı£¬ÉèÖÃ M3508 ÂÖËÙÄ¿±ê
-    //    Judge_Speed_Direction£º³¬90¡ã·­Ïò£»Judge_Speed_cosk£ºcos3Ë¥¼õ
+    // â‘¢ æ ¹æ®èˆµè½®è§’å·®è¡°å‡ç³»æ•°ï¼Œè®¾ç½® M3508 è½®é€Ÿç›®æ ‡
+    //    Judge_Speed_Directionï¼šè¶…90Â°ç¿»å‘ï¼›Judge_Speed_coskï¼šcos3è¡°å‡
     chassis_move_control_loop->motor_chassis[0].speed_set =
         chassis_move_control_loop->Forward_L.wheel_speed *
         chassis_move_control_loop->Forward_L.Judge_Speed_Direction *
@@ -784,7 +781,7 @@ static void chassis_control_loop(chassis_move_t *chassis_move_control_loop)
         chassis_move_control_loop->Back_R.Judge_Speed_Direction *
         chassis_move_control_loop->Back_R.Judge_Speed_cosk;
 
-    // ¢Ü ÂÖËÙÏŞ·ù£¨±£³Ö¸÷ÂÖËÙ±ÈÀı£©
+    // â‘£ è½®é€Ÿé™å¹…ï¼ˆä¿æŒå„è½®é€Ÿæ¯”ä¾‹ï¼‰
     for (i = 0; i < 4; i++)
     {
         temp = fabs(chassis_move_control_loop->motor_chassis[i].speed_set);
@@ -798,7 +795,7 @@ static void chassis_control_loop(chassis_move_t *chassis_move_control_loop)
             chassis_move_control_loop->motor_chassis[i].speed_set *= vector_rate;
     }
 
-    // ¢İ M3508 ÂÖËÙ PID
+    // â‘¤ M3508 è½®é€Ÿ PID
     for (i = 0; i < 4; i++)
     {
         PID_calc(&chassis_move_control_loop->motor_speed_pid[i],
@@ -806,7 +803,7 @@ static void chassis_control_loop(chassis_move_t *chassis_move_control_loop)
                  chassis_move_control_loop->motor_chassis[i].speed_set);
     }
 
-    // ¢Ş ¸³ÖµµçÁ÷
+    // â‘¥ èµ‹å€¼ç”µæµ
     for (i = 0; i < 4; i++)
     {
         chassis_move_control_loop->motor_chassis[i].give_current =
@@ -823,20 +820,20 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
     can_send_tmp++;
 
     uint16_t max_power_limit = 30;
-    fp32 input_power = 0; // ÊäÈë¹¦ÂÊ(¾­¹ı»º³åºóµÄ¿ÉÓÃ¹¦ÂÊ)
+    fp32 input_power = 0; // è¾“å…¥åŠŸç‡(ç»è¿‡ç¼“å†²åçš„å¯ç”¨åŠŸç‡)
     fp32 scaled_motor_power[4];
-    fp32 toque_coefficient = 1.99688994e-6f; // (20/16384)*(0.3)*(187/3591)/9.55  ×ª¾ØÏµÊı
-    fp32 k2 = 1.23e-07;                      // µçÁ÷ÏµÊı
-    fp32 k1 = 1.453e-07;                     // µçÁ÷ÏµÊı
+    fp32 toque_coefficient = 1.99688994e-6f; // (20/16384)*(0.3)*(187/3591)/9.55  è½¬çŸ©ç³»æ•°
+    fp32 k2 = 1.23e-07;                      // ç”µæµç³»æ•°
+    fp32 k1 = 1.453e-07;                     // ç”µæµç³»æ•°
 
-    fp32 constant = 4.081f;                                // 3508µç»ú¿Õ×ª¹¦ÂÊ
-    chassis_motor->power_control.POWER_MAX = 0;            // ¿ÉÓÃµÄ×î´ó¹¦ÂÊ
-    chassis_motor->power_control.forecast_total_power = 0; // Ô¤²â×Ü¹¦ÂÊ
+    fp32 constant = 4.081f;                                // 3508ç”µæœºç©ºè½¬åŠŸç‡
+    chassis_motor->power_control.POWER_MAX = 0;            // å¯ç”¨çš„æœ€å¤§åŠŸç‡
+    chassis_motor->power_control.forecast_total_power = 0; // é¢„æµ‹æ€»åŠŸç‡
 
-    // PID_Calc(&chassis_motor->buffer_pid, chassis_motor->power_heat_data->buffer_energy, 30); //Ê¹ÓÃ»º³åÄÜÁ¿Î¬³ÖÒ»¸ö·¶Î§ÄÚ,Õâ¸öPIDÃ»ÓĞÒªÒÆÖ²µÄµØ·½£¬ÏÈ±£ÁôÒ»¸öPID
+    // PID_Calc(&chassis_motor->buffer_pid, chassis_motor->power_heat_data->buffer_energy, 30); //ä½¿ç”¨ç¼“å†²èƒ½é‡ç»´æŒä¸€ä¸ªèŒƒå›´å†…,è¿™ä¸ªPIDæ²¡æœ‰è¦ç§»æ¤çš„åœ°æ–¹ï¼Œå…ˆä¿ç•™ä¸€ä¸ªPID
     PID_calc(&chassis_motor->buffer_pid, chassis_motor->power_heat_data->buffer_energy, 30);
 
-    // »ñÈ¡²ÃÅĞÏµÍ³ÏŞÖÆ¹¦ÂÊ
+    // è·å–è£åˆ¤ç³»ç»Ÿé™åˆ¶åŠŸç‡
     if (chassis_motor->robot_state->chassis_power_limit > 120)
     {
         max_power_limit = 120;
@@ -846,22 +843,22 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
         max_power_limit = chassis_motor->robot_state->chassis_power_limit;
     }
 
-    input_power = max_power_limit - chassis_motor->buffer_pid.out; // Í¨¹ı»º³åPIDµ÷ÕûÊäÈë¹¦ÂÊ
+    input_power = max_power_limit - chassis_motor->buffer_pid.out; // é€šè¿‡ç¼“å†²PIDè°ƒæ•´è¾“å…¥åŠŸç‡
 
-    chassis_motor->power_control.power_charge = input_power * 100; // ×ª»»ÎªµçÈİ³äµç¹¦ÂÊ
+    chassis_motor->power_control.power_charge = input_power * 100; // è½¬æ¢ä¸ºç”µå®¹å……ç”µåŠŸç‡
 
     if (chassis_motor->power_control.power_charge > 150 * 100)
-        chassis_motor->power_control.power_charge = 150 * 100; // ÏŞÖÆ×î´ó³äµç¹¦ÂÊ£¬·ÀÖ¹µçÈİ¹ı³ä
+        chassis_motor->power_control.power_charge = 150 * 100; // é™åˆ¶æœ€å¤§å……ç”µåŠŸç‡ï¼Œé˜²æ­¢ç”µå®¹è¿‡å……
 
     //	if(CAN_CMD_cap_send_t>2)
     //	{
-    //		CAN_cmd_cap(chassis_motor->power_control.power_charge,1); // ·¢ËÍµçÈİ³äµç¹¦ÂÊ
+    //		CAN_cmd_cap(chassis_motor->power_control.power_charge,1); // å‘é€ç”µå®¹å……ç”µåŠŸç‡
     //		CAN_CMD_cap_send_t = 0;
     //	}
 
     if (chassis_motor->cap_data->cap_volt > 6.0f)
     {
-		if (KEY_shift == 1) // °´ÏÂShift
+		if (KEY_shift == 1) // æŒ‰ä¸‹Shift
 		{
 			if (chassis_motor->cap_data->cap_volt > 13)
 			{
@@ -871,7 +868,7 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
 			{
 				chassis_motor->power_control.POWER_MAX = input_power + 5;
 			}
-//				if (chassis_motor->robot_state->chassis_power_limit <= 40) // Èç¹û¹¦ÂÊ½ÏµÍ
+//				if (chassis_motor->robot_state->chassis_power_limit <= 40) // å¦‚æœåŠŸç‡è¾ƒä½
 //				{
 //					if (chassis_motor->cap_data->cap_volt > 12)
 //					{
@@ -883,10 +880,10 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
 //					}
 //				}
 		}
-		else // Î´°´ÏÂShift
+		else // æœªæŒ‰ä¸‹Shift
 		{
 			chassis_motor->power_control.POWER_MAX = input_power;
-//				if (chassis_motor->robot_state->chassis_power_limit <= 40) // ¹¦ÂÊ½ÏµÍÊ±²»²¹³ä
+//				if (chassis_motor->robot_state->chassis_power_limit <= 40) // åŠŸç‡è¾ƒä½æ—¶ä¸è¡¥å……
 //				{
 //					if (chassis_motor->cap_data->cap_volt > 18)
 //						chassis_motor->power_control.POWER_MAX = 50;
@@ -898,7 +895,7 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
     else
     {
         chassis_motor->power_control.POWER_MAX = input_power - 30;
-//		if (chassis_motor->robot_state->chassis_power_limit <= 40) // ¹¦ÂÊ½ÏµÍ
+//		if (chassis_motor->robot_state->chassis_power_limit <= 40) // åŠŸç‡è¾ƒä½
 //		{
 //			chassis_motor->power_control.POWER_MAX = chassis_motor->robot_state->chassis_power_limit - 5;
 //		}
@@ -914,26 +911,26 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
 
 	
 	
-	// ¹¦ÂÊÄ£Ê½
-    for (uint8_t i = 0; i < 4; i++) // ±éÀúËÄ¸ö3508µç»ú£¬Ô¤²â¹¦ÂÊ
+	// åŠŸç‡æ¨¡å¼
+    for (uint8_t i = 0; i < 4; i++) // éå†å››ä¸ª3508ç”µæœºï¼Œé¢„æµ‹åŠŸç‡
     {
         chassis_motor->power_control.forecast_motor_power[i] =
-            chassis_motor->motor_chassis[i].give_current * toque_coefficient * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm        // ×ª¾à¹¦ÂÊ
-            + k1 * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm // Ä¦²Á¹¦ÂÊ
+            chassis_motor->motor_chassis[i].give_current * toque_coefficient * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm        // è½¬è·åŠŸç‡
+            + k1 * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm // æ‘©æ“¦åŠŸç‡
             + k2 * chassis_motor->motor_chassis[i].give_current * chassis_motor->motor_chassis[i].give_current + constant;
 
         if (chassis_motor->power_control.forecast_motor_power[i] < 0)
-            continue; // Ğ¡ÓÚ0ºöÂÔ
+            continue; // å°äº0å¿½ç•¥
 
-        chassis_motor->power_control.forecast_total_power += chassis_motor->power_control.forecast_motor_power[i]; // ¼ÆËã×Ü¹¦ÂÊ = Ô¤²â¹¦ÂÊ
+        chassis_motor->power_control.forecast_total_power += chassis_motor->power_control.forecast_motor_power[i]; // è®¡ç®—æ€»åŠŸç‡ = é¢„æµ‹åŠŸç‡
     }
  
-    if (chassis_motor->power_control.forecast_total_power > chassis_motor->power_control.POWER_MAX) // Èç¹û³¬¹¦ÂÊ£¬½øĞĞ¹¦ÂÊÏŞÖÆ
+    if (chassis_motor->power_control.forecast_total_power > chassis_motor->power_control.POWER_MAX) // å¦‚æœè¶…åŠŸç‡ï¼Œè¿›è¡ŒåŠŸç‡é™åˆ¶
     {
         fp32 power_scale = chassis_motor->power_control.POWER_MAX / chassis_motor->power_control.forecast_total_power;
         for (uint8_t i = 0; i < 4; i++)
         {
-            scaled_motor_power[i] = chassis_motor->power_control.forecast_motor_power[i] * power_scale; // Ëõ·ÅºóµÄ¹¦ÂÊ
+            scaled_motor_power[i] = chassis_motor->power_control.forecast_motor_power[i] * power_scale; // ç¼©æ”¾åçš„åŠŸç‡
 
             if (scaled_motor_power[i] < 0)
                 continue;
@@ -941,7 +938,7 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
             fp32 b = toque_coefficient * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm;
             fp32 c = k1 * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm * chassis_motor->motor_chassis[i].chassis_motor_measure->speed_rpm - scaled_motor_power[i] + constant;
 
-            if (chassis_motor->motor_chassis[i].give_current > 0) // Õı×ª
+            if (chassis_motor->motor_chassis[i].give_current > 0) // æ­£è½¬
             {
                 chassis_motor->power_control.MAX_current[i] = (-b + sqrt(b * b - 4 * k2 * c)) / (2 * k2);
                 if (chassis_motor->power_control.MAX_current[i] > 16000)
@@ -966,30 +963,30 @@ void CHASSIC_MOTOR_POWER_CONTROL(chassis_move_t *chassis_motor)
 }
 
 /**
- * @brief          ´ò°üË«Í¨µÀ·¢ËÍÖ¡
- * @param[out]     send_data_pack:"chassis_move"½á¹¹ÌåÖ¸Õë
+ * @brief          æ‰“åŒ…åŒé€šé“å‘é€å¸§
+ * @param[out]     send_data_pack:"chassis_move"ç»“æ„ä½“æŒ‡é’ˆ
  * @retval         none
  */
 void comm_data_pack(chassis_move_t *send_data_pack)
 {
-    /* AÍ¨µÀ */
+    /* Aé€šé“ */
     uint8_t send_flag;
     // tx_Flag
-    if (send_data_pack->robot_state->power_management_gimbal_output == 1) // ÔÆÌ¨Êä³ö
+    if (send_data_pack->robot_state->power_management_gimbal_output == 1) // äº‘å°è¾“å‡º
         send_flag |= (1 << 0);
     else
         send_flag &= ~(1 << 0);
-    if (send_data_pack->robot_state->power_management_shooter_output == 1) // ·¢ÉäÆ÷Êä³ö
+    if (send_data_pack->robot_state->power_management_shooter_output == 1) // å‘å°„å™¨è¾“å‡º
         send_flag |= (1 << 1);
     else
         send_flag &= ~(1 << 1);
-	if (send_data_pack->robot_state->robot_id > 100) // »úÆ÷ÈËID 0ºì 1À¶
-        send_flag |= (1 << 2); // À¶
+	if (send_data_pack->robot_state->robot_id > 100) // æœºå™¨äººID 0çº¢ 1è“
+        send_flag |= (1 << 2); // è“
     else
-        send_flag &= ~(1 << 2); // ºì
+        send_flag &= ~(1 << 2); // çº¢
 	
 
-    // Ìî³ä´ı·¢ËÍµÄ½á¹¹Ìå
+    // å¡«å……å¾…å‘é€çš„ç»“æ„ä½“
     send_data_pack->comm_tx_a.tx_current_heat = send_data_pack->power_heat_data->shooter_42mm_barrel_heat;
     send_data_pack->comm_tx_a.tx_robo_level = send_data_pack->robot_state->robot_level;
     send_data_pack->comm_tx_a.tx_initial_speed_x100 = (uint16_t)(send_data_pack->shoot_data->initial_speed*100.0f);
