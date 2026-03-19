@@ -170,20 +170,13 @@ void chassis_task(void const *pvParameters)
 			{
 				CAN_cmd_chassis(0, 0, 0, 0);
 				CAN_cmd_rudder(0, 0, 0, 0);
-
 			}
 			else
 			{
 				// 发送 M3508 轮速电流（CAN2, 0x200 → 0x201-0x204）
-				CAN_cmd_chassis(chassis_move.motor_chassis[0].give_current, chassis_move.motor_chassis[1].give_current,
-								chassis_move.motor_chassis[2].give_current, chassis_move.motor_chassis[3].give_current);
+				CAN_cmd_chassis(chassis_move.motor_chassis[0].give_current, chassis_move.motor_chassis[1].give_current,0,0);
 				// 发送 GM6020 舵轮方向电流（CAN2, 0x1FF → 0x205-0x208）
-				CAN_cmd_rudder((int16_t)chassis_move.rudder_given_current[0],
-							   (int16_t)chassis_move.rudder_given_current[1],
-							   (int16_t)chassis_move.rudder_given_current[2],
-							   (int16_t)chassis_move.rudder_given_current[3]);
-							CAN_cmd_rudder(0x2000, 0x2000, 0x2000, 0x2000);
-
+				CAN_cmd_rudder((int16_t)chassis_move.rudder_given_current[0],(int16_t)chassis_move.rudder_given_current[1],0,0);
 			}
 		}
 		else
@@ -586,7 +579,7 @@ static void chassic_rudder_preliminary_A_S_solution(chassis_move_t *chassic_rudd
     chassic_rudder_preliminary_solution->Forward_L.wheel_speed =  sqrt(pow((vy_set + vw_set * arm_cos_f32(DEG2R(45))), 2) + pow((vx_set + vw_set * arm_sin_f32(DEG2R(45))), 2));
     chassic_rudder_preliminary_solution->Back_L.wheel_speed    =  sqrt(pow((vy_set - vw_set * arm_cos_f32(DEG2R(45))), 2) + pow((vx_set + vw_set * arm_sin_f32(DEG2R(45))), 2));
     chassic_rudder_preliminary_solution->Back_R.wheel_speed    =  sqrt(pow((vy_set - vw_set * arm_cos_f32(DEG2R(45))), 2) + pow((vx_set - vw_set * arm_sin_f32(DEG2R(45))), 2));
-    chassic_rudder_preliminary_solution->Forward_R.wheel_speed = -sqrt(pow((vy_set + vw_set * arm_cos_f32(DEG2R(45))), 2) + pow((vx_set - vw_set * arm_sin_f32(DEG2R(45))), 2));
+    chassic_rudder_preliminary_solution->Forward_R.wheel_speed =  sqrt(pow((vy_set + vw_set * arm_cos_f32(DEG2R(45))), 2) + pow((vx_set - vw_set * arm_sin_f32(DEG2R(45))), 2));
 
     // 计算各轮舵轮目标角度 (rad)，由速度方向决定
     chassic_rudder_preliminary_solution->Forward_L.rudder_angle = atan2((vy_set + vw_set * arm_cos_f32(DEG2R(45))), (vx_set + vw_set * arm_sin_f32(DEG2R(45))));
@@ -616,8 +609,8 @@ static void rudder_control_loop(chassis_move_t *rudder_move_control_loop)
 {
     Rudder_motor_relative_angle_control(&rudder_move_control_loop->Forward_L);
     Rudder_motor_relative_angle_control(&rudder_move_control_loop->Forward_R);
-    Rudder_motor_relative_angle_control(&rudder_move_control_loop->Back_L);
-    Rudder_motor_relative_angle_control(&rudder_move_control_loop->Back_R);
+    //Rudder_motor_relative_angle_control(&rudder_move_control_loop->Back_L);
+   // Rudder_motor_relative_angle_control(&rudder_move_control_loop->Back_R);
 }
 
 /**
@@ -796,18 +789,22 @@ static void chassis_control_loop(chassis_move_t *chassis_move_control_loop)
     }
 
     // ⑤ M3508 轮速 PID
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 2; i++)
     {
         PID_calc(&chassis_move_control_loop->motor_speed_pid[i],
                  chassis_move_control_loop->motor_chassis[i].speed,
                  chassis_move_control_loop->motor_chassis[i].speed_set);
     }
 
-    // ⑥ 赋值电流
+// ⑥ 赋值电流：仅赋给前两轮，后两轮清零
     for (i = 0; i < 4; i++)
     {
-        chassis_move_control_loop->motor_chassis[i].give_current =
-            (int16_t)(chassis_move_control_loop->motor_speed_pid[i].out);
+        if (i < 2) {
+            chassis_move_control_loop->motor_chassis[i].give_current =
+                (int16_t)(chassis_move_control_loop->motor_speed_pid[i].out);
+        } else {
+            chassis_move_control_loop->motor_chassis[i].give_current = 0;
+        }
     }
 }
 
